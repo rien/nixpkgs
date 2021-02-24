@@ -1,4 +1,5 @@
-{ lib, stdenv
+{ lib
+, stdenv
 , fetchurl
 , fetchpatch
 , autoconf213
@@ -21,12 +22,22 @@
 
 stdenv.mkDerivation rec {
   pname = "spidermonkey";
-  version = "78.4.0";
+  version = "78.6.0";
 
   src = fetchurl {
     url = "mirror://mozilla/firefox/releases/${version}esr/source/firefox-${version}esr.source.tar.xz";
-    sha256 = "1z3hj45bnd12z3g6ajv9qrgclca7fymi1sxj9l9nh9q6y6xz0g4f";
+    sha256 = "0lyg65v380j8i2lrylwz8a5ya80822l8vcnlx3dfqpd3s6zzjsay";
   };
+
+  postPatch = ''
+    # This patch is a manually applied fix of
+    #   https://bugzilla.mozilla.org/show_bug.cgi?id=1644600
+    # Once that bug is fixed, this can be removed.
+    # This is needed in, for example, `zeroad`.
+    substituteInPlace js/public/StructuredClone.h \
+         --replace "class SharedArrayRawBufferRefs {" \
+                   "class JS_PUBLIC_API SharedArrayRawBufferRefs {"
+  '';
 
   outputs = [ "out" "dev" ];
   setOutputFlags = false; # Configure script only understands --includedir

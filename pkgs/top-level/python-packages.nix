@@ -2583,6 +2583,8 @@ in {
 
   fpdf = callPackage ../development/python-modules/fpdf { };
 
+  fpdf2 = callPackage ../development/python-modules/fpdf2 { };
+
   fpylll = callPackage ../development/python-modules/fpylll { };
 
   freebox-api = callPackage ../development/python-modules/freebox-api { };

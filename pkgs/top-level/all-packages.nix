@@ -25025,6 +25025,7 @@ in
     withPulseAudio = config.pulseaudio or stdenv.isLinux;
     withPortAudio = stdenv.isDarwin;
     withMPRIS = stdenv.isLinux;
+    withClipboard = stdenv.isLinux;
   };
 
   ncview = callPackage ../tools/X11/ncview { } ;

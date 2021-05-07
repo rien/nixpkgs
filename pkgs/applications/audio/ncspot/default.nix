@@ -3,6 +3,7 @@
 , withPulseAudio ? false, libpulseaudio ? null
 , withPortAudio ? false, portaudio ? null
 , withMPRIS ? false, dbus ? null
+, withClipboard ? true, libxcb ? null, python3
 }:
 
 let
@@ -10,7 +11,8 @@ let
     ++ lib.optional withALSA "alsa_backend"
     ++ lib.optional withPulseAudio "pulseaudio_backend"
     ++ lib.optional withPortAudio "portaudio_backend"
-    ++ lib.optional withMPRIS "mpris";
+    ++ lib.optional withMPRIS "mpris"
+    ++ lib.optional withClipboard "clipboard";
 in
 rustPlatform.buildRustPackage rec {
   pname = "ncspot";
@@ -27,14 +29,16 @@ rustPlatform.buildRustPackage rec {
 
   cargoBuildFlags = [ "--no-default-features" "--features" "${lib.concatStringsSep "," features}" ];
 
-  nativeBuildInputs = [ pkg-config ];
+  nativeBuildInputs = [ pkg-config ]
+    ++ lib.optional withClipboard python3;
 
   buildInputs = [ ncurses openssl ]
     ++ lib.optional stdenv.isDarwin libiconv
     ++ lib.optional withALSA alsaLib
     ++ lib.optional withPulseAudio libpulseaudio
     ++ lib.optional withPortAudio portaudio
-    ++ lib.optional withMPRIS dbus;
+    ++ lib.optional withMPRIS dbus
+    ++ lib.optional withClipboard libxcb;
 
   doCheck = false;
 
